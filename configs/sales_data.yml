@@ -1,0 +1,21 @@
+source:
+  type: file
+  path: /data/input
+  format: csv
+  options:
+    header: true
+
+raw:
+  target_table: raw_data.sales
+  mode: overwrite
+  partition_by: ["ingestion_date"]
+
+processing:
+  transformations:
+    - rename: {"order_id": "transaction_id"}
+    - cast: {"amount": "double"}
+
+processed:
+  target_table: processed_data.sales
+  mode: merge
+  merge_keys: ["transaction_id"]
